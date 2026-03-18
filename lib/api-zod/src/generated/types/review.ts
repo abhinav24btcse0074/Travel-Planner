@@ -6,12 +6,13 @@
  * OpenAPI spec version: 0.1.0
  */
 
-export interface Destination {
+export interface Review {
   id: string;
-  name: string;
-  country: string;
-  imageUrl: string;
-  startingPrice: number;
-  description: string;
-  tags: string[];
+  author: string;
+  avatar: string;
+  rating: number;
+  date: string;
+  title: string;
+  comment: string;
+  helpful: number;
 }

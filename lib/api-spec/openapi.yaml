@@ -2,7 +2,7 @@ openapi: 3.1.0
 info:
   title: Api
   version: 0.1.0
-  description: MakeMyTrip Clone API
+  description: Hotel Management System API
 servers:
   - url: /api
     description: Base API path
@@ -13,6 +13,8 @@ tags:
     description: Flight search and booking
   - name: hotels
     description: Hotel search and booking
+  - name: bookings
+    description: Booking management
   - name: offers
     description: Promotional offers
   - name: destinations
@@ -23,7 +25,6 @@ paths:
       operationId: healthCheck
       tags: [health]
       summary: Health check
-      description: Returns server health status
       responses:
         "200":
           description: Healthy
@@ -119,6 +120,125 @@ paths:
                 items:
                   $ref: "#/components/schemas/Hotel"
 
+  /hotels/{hotelId}:
+    get:
+      operationId: getHotelDetail
+      tags: [hotels]
+      summary: Get hotel detail
+      parameters:
+        - name: hotelId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Hotel detail
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HotelDetail"
+        "404":
+          description: Hotel not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /hotels/{hotelId}/rooms:
+    get:
+      operationId: getHotelRooms
+      tags: [hotels]
+      summary: Get available room types for a hotel
+      parameters:
+        - name: hotelId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: checkIn
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: checkOut
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: guests
+          in: query
+          required: false
+          schema:
+            type: integer
+            default: 1
+      responses:
+        "200":
+          description: List of available room types
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/RoomType"
+
+  /bookings:
+    get:
+      operationId: getBookings
+      tags: [bookings]
+      summary: Get all bookings
+      responses:
+        "200":
+          description: List of bookings
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Booking"
+    post:
+      operationId: createBooking
+      tags: [bookings]
+      summary: Create a new hotel booking
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateBookingRequest"
+      responses:
+        "201":
+          description: Booking created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Booking"
+
+  /bookings/{bookingId}:
+    get:
+      operationId: getBookingDetail
+      tags: [bookings]
+      summary: Get booking detail
+      parameters:
+        - name: bookingId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Booking detail
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Booking"
+        "404":
+          description: Booking not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
   /offers:
     get:
       operationId: getOffers
@@ -158,6 +278,14 @@ components:
           type: string
       required:
         - status
+
+    ErrorResponse:
+      type: object
+      properties:
+        error:
+          type: string
+      required:
+        - error
 
     Flight:
       type: object
@@ -251,6 +379,270 @@ components:
         - imageUrl
         - category
         - discount
+
+    HotelDetail:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        city:
+          type: string
+        address:
+          type: string
+        rating:
+          type: number
+        reviewCount:
+          type: integer
+        pricePerNight:
+          type: number
+        amenities:
+          type: array
+          items:
+            type: string
+        images:
+          type: array
+          items:
+            type: string
+        category:
+          type: string
+        discount:
+          type: integer
+        description:
+          type: string
+        policies:
+          type: object
+          properties:
+            checkIn:
+              type: string
+            checkOut:
+              type: string
+            cancellation:
+              type: string
+            pets:
+              type: string
+          required:
+            - checkIn
+            - checkOut
+            - cancellation
+            - pets
+        reviews:
+          type: array
+          items:
+            $ref: "#/components/schemas/Review"
+        latitude:
+          type: number
+        longitude:
+          type: number
+      required:
+        - id
+        - name
+        - city
+        - address
+        - rating
+        - reviewCount
+        - pricePerNight
+        - amenities
+        - images
+        - category
+        - discount
+        - description
+        - policies
+        - reviews
+        - latitude
+        - longitude
+
+    Review:
+      type: object
+      properties:
+        id:
+          type: string
+        author:
+          type: string
+        avatar:
+          type: string
+        rating:
+          type: number
+        date:
+          type: string
+        title:
+          type: string
+        comment:
+          type: string
+        helpful:
+          type: integer
+      required:
+        - id
+        - author
+        - avatar
+        - rating
+        - date
+        - title
+        - comment
+        - helpful
+
+    RoomType:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        description:
+          type: string
+        maxGuests:
+          type: integer
+        size:
+          type: string
+        bedType:
+          type: string
+        pricePerNight:
+          type: number
+        originalPrice:
+          type: number
+        images:
+          type: array
+          items:
+            type: string
+        amenities:
+          type: array
+          items:
+            type: string
+        available:
+          type: integer
+        refundable:
+          type: boolean
+        mealIncluded:
+          type: string
+      required:
+        - id
+        - name
+        - description
+        - maxGuests
+        - size
+        - bedType
+        - pricePerNight
+        - originalPrice
+        - images
+        - amenities
+        - available
+        - refundable
+        - mealIncluded
+
+    CreateBookingRequest:
+      type: object
+      properties:
+        hotelId:
+          type: string
+        hotelName:
+          type: string
+        roomTypeId:
+          type: string
+        roomTypeName:
+          type: string
+        checkIn:
+          type: string
+        checkOut:
+          type: string
+        guests:
+          type: integer
+        rooms:
+          type: integer
+        pricePerNight:
+          type: number
+        totalPrice:
+          type: number
+        guestName:
+          type: string
+        guestEmail:
+          type: string
+        guestPhone:
+          type: string
+        specialRequests:
+          type: string
+      required:
+        - hotelId
+        - hotelName
+        - roomTypeId
+        - roomTypeName
+        - checkIn
+        - checkOut
+        - guests
+        - rooms
+        - pricePerNight
+        - totalPrice
+        - guestName
+        - guestEmail
+        - guestPhone
+
+    Booking:
+      type: object
+      properties:
+        id:
+          type: string
+        bookingRef:
+          type: string
+        hotelId:
+          type: string
+        hotelName:
+          type: string
+        hotelImage:
+          type: string
+        city:
+          type: string
+        roomTypeId:
+          type: string
+        roomTypeName:
+          type: string
+        checkIn:
+          type: string
+        checkOut:
+          type: string
+        guests:
+          type: integer
+        rooms:
+          type: integer
+        pricePerNight:
+          type: number
+        totalPrice:
+          type: number
+        guestName:
+          type: string
+        guestEmail:
+          type: string
+        guestPhone:
+          type: string
+        specialRequests:
+          type: string
+        status:
+          type: string
+          enum: [confirmed, pending, cancelled, completed]
+        createdAt:
+          type: string
+        nights:
+          type: integer
+      required:
+        - id
+        - bookingRef
+        - hotelId
+        - hotelName
+        - hotelImage
+        - city
+        - roomTypeId
+        - roomTypeName
+        - checkIn
+        - checkOut
+        - guests
+        - rooms
+        - pricePerNight
+        - totalPrice
+        - guestName
+        - guestEmail
+        - guestPhone
+        - status
+        - createdAt
+        - nights
 
     Offer:
       type: object

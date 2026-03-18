@@ -4,6 +4,7 @@ import flightsRouter from "./flights";
 import hotelsRouter from "./hotels";
 import offersRouter from "./offers";
 import destinationsRouter from "./destinations";
+import bookingsRouter from "./bookings";
 
 const router: IRouter = Router();
 
@@ -12,5 +13,6 @@ router.use("/flights", flightsRouter);
 router.use("/hotels", hotelsRouter);
 router.use("/offers", offersRouter);
 router.use("/destinations", destinationsRouter);
+router.use("/bookings", bookingsRouter);
 
 export default router;

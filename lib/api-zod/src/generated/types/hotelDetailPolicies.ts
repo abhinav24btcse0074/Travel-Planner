@@ -6,10 +6,9 @@
  * OpenAPI spec version: 0.1.0
  */
 
-export type SearchHotelsParams = {
-  city: string;
+export type HotelDetailPolicies = {
   checkIn: string;
   checkOut: string;
-  guests?: number;
-  rooms?: number;
+  cancellation: string;
+  pets: string;
 };

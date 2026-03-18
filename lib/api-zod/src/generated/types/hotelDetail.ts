@@ -5,8 +5,10 @@
  * Hotel Management System API
  * OpenAPI spec version: 0.1.0
  */
+import type { HotelDetailPolicies } from "./hotelDetailPolicies";
+import type { Review } from "./review";
 
-export interface Hotel {
+export interface HotelDetail {
   id: string;
   name: string;
   city: string;
@@ -15,7 +17,12 @@ export interface Hotel {
   reviewCount: number;
   pricePerNight: number;
   amenities: string[];
-  imageUrl: string;
+  images: string[];
   category: string;
   discount: number;
+  description: string;
+  policies: HotelDetailPolicies;
+  reviews: Review[];
+  latitude: number;
+  longitude: number;
 }
