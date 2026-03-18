@@ -6,10 +6,10 @@ import { Button } from "./ui/button";
 const navItems = [
   { label: "Flights", icon: Plane, href: "/flights?from=DEL&to=BOM&date=2026-04-01" },
   { label: "Hotels", icon: Building2, href: "/hotels?city=Goa&checkIn=2026-04-10&checkOut=2026-04-12" },
-  { label: "Holidays", icon: Backpack, href: "/#holidays" },
-  { label: "Trains", icon: Train, href: "/#trains" },
+  { label: "Holidays", icon: Backpack, href: "/holidays" },
+  { label: "Trains", icon: Train, href: "/trains" },
   { label: "Buses", icon: Bus, href: "/#buses" },
-  { label: "Cabs", icon: Car, href: "/#cabs" },
+  { label: "Cabs", icon: Car, href: "/cabs" },
   { label: "Offers", icon: BadgePercent, href: "/offers" },
 ];
 
@@ -34,7 +34,8 @@ export function Header() {
         {/* Desktop Nav */}
         <nav className="hidden lg:flex items-center gap-5 xl:gap-7">
           {navItems.map((item) => {
-            const isActive = location === item.href || (item.href !== "/" && location.startsWith(item.href.split("?")[0]));
+            const basePath = item.href.split("?")[0];
+            const isActive = location === basePath || (basePath !== "/" && location.startsWith(basePath));
             return (
               <Link
                 key={item.label}

@@ -269,6 +269,32 @@ paths:
                 items:
                   $ref: "#/components/schemas/Destination"
 
+  /holidays:
+    get:
+      operationId: getHolidayPackages
+      tags: [holidays]
+      summary: Get holiday packages
+      parameters:
+        - name: destination
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: category
+          in: query
+          required: false
+          schema:
+            type: string
+      responses:
+        "200":
+          description: List of holiday packages
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/HolidayPackage"
+
 components:
   schemas:
     HealthStatus:
@@ -699,4 +725,87 @@ components:
         - imageUrl
         - startingPrice
         - description
+        - tags
+
+    HolidayPackage:
+      type: object
+      properties:
+        id:
+          type: string
+        title:
+          type: string
+        destination:
+          type: string
+        country:
+          type: string
+        imageUrl:
+          type: string
+        duration:
+          type: string
+        startingPrice:
+          type: number
+        originalPrice:
+          type: number
+        discount:
+          type: integer
+        rating:
+          type: number
+        reviewCount:
+          type: integer
+        category:
+          type: string
+        highlights:
+          type: array
+          items:
+            type: string
+        inclusions:
+          type: array
+          items:
+            type: string
+        exclusions:
+          type: array
+          items:
+            type: string
+        itinerary:
+          type: array
+          items:
+            type: object
+            properties:
+              day:
+                type: integer
+              title:
+                type: string
+              description:
+                type: string
+            required: [day, title, description]
+        departureCity:
+          type: string
+        departureDate:
+          type: string
+        availableSeats:
+          type: integer
+        tags:
+          type: array
+          items:
+            type: string
+      required:
+        - id
+        - title
+        - destination
+        - country
+        - imageUrl
+        - duration
+        - startingPrice
+        - originalPrice
+        - discount
+        - rating
+        - reviewCount
+        - category
+        - highlights
+        - inclusions
+        - exclusions
+        - itinerary
+        - departureCity
+        - departureDate
+        - availableSeats
         - tags

@@ -11,6 +11,10 @@ import BookingPage from "@/pages/BookingPage";
 import BookingConfirmation from "@/pages/BookingConfirmation";
 import MyBookings from "@/pages/MyBookings";
 import OffersPage from "@/pages/OffersPage";
+import HolidayPackages from "@/pages/HolidayPackages";
+import CabsPage from "@/pages/CabsPage";
+import TrainsPage from "@/pages/TrainsPage";
+import FlightBooking from "@/pages/FlightBooking";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -25,13 +29,17 @@ function Router() {
   return (
     <Switch>
       <Route path="/" component={Home} />
+      <Route path="/flights/:flightId/book" component={FlightBooking} />
       <Route path="/flights" component={Flights} />
-      <Route path="/hotels" component={Hotels} />
       <Route path="/hotels/:id/book" component={BookingPage} />
       <Route path="/hotels/:id" component={HotelDetail} />
+      <Route path="/hotels" component={Hotels} />
       <Route path="/booking/confirmation/:id" component={BookingConfirmation} />
       <Route path="/my-bookings" component={MyBookings} />
       <Route path="/offers" component={OffersPage} />
+      <Route path="/holidays" component={HolidayPackages} />
+      <Route path="/cabs" component={CabsPage} />
+      <Route path="/trains" component={TrainsPage} />
       <Route component={NotFound} />
     </Switch>
   );
