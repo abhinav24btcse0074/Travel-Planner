@@ -1,15 +1,22 @@
 openapi: 3.1.0
 info:
-  # Do not change the title, if the title changes, the import paths will be broken
   title: Api
   version: 0.1.0
-  description: API specification
+  description: MakeMyTrip Clone API
 servers:
   - url: /api
     description: Base API path
 tags:
   - name: health
     description: Health operations
+  - name: flights
+    description: Flight search and booking
+  - name: hotels
+    description: Hotel search and booking
+  - name: offers
+    description: Promotional offers
+  - name: destinations
+    description: Popular destinations
 paths:
   /healthz:
     get:
@@ -24,6 +31,124 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/HealthStatus"
+
+  /flights/search:
+    get:
+      operationId: searchFlights
+      tags: [flights]
+      summary: Search for flights
+      parameters:
+        - name: from
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: to
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: date
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: passengers
+          in: query
+          required: false
+          schema:
+            type: integer
+            default: 1
+        - name: class
+          in: query
+          required: false
+          schema:
+            type: string
+            enum: [economy, business, first]
+            default: economy
+      responses:
+        "200":
+          description: List of available flights
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Flight"
+
+  /hotels/search:
+    get:
+      operationId: searchHotels
+      tags: [hotels]
+      summary: Search for hotels
+      parameters:
+        - name: city
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: checkIn
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: checkOut
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: guests
+          in: query
+          required: false
+          schema:
+            type: integer
+            default: 1
+        - name: rooms
+          in: query
+          required: false
+          schema:
+            type: integer
+            default: 1
+      responses:
+        "200":
+          description: List of available hotels
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Hotel"
+
+  /offers:
+    get:
+      operationId: getOffers
+      tags: [offers]
+      summary: Get promotional offers
+      responses:
+        "200":
+          description: List of promotional offers
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Offer"
+
+  /destinations/popular:
+    get:
+      operationId: getPopularDestinations
+      tags: [destinations]
+      summary: Get popular travel destinations
+      responses:
+        "200":
+          description: List of popular destinations
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Destination"
+
 components:
   schemas:
     HealthStatus:
@@ -34,3 +159,152 @@ components:
       required:
         - status
 
+    Flight:
+      type: object
+      properties:
+        id:
+          type: string
+        airline:
+          type: string
+        airlineCode:
+          type: string
+        flightNumber:
+          type: string
+        from:
+          type: string
+        fromCode:
+          type: string
+        to:
+          type: string
+        toCode:
+          type: string
+        departureTime:
+          type: string
+        arrivalTime:
+          type: string
+        duration:
+          type: string
+        stops:
+          type: integer
+        price:
+          type: number
+        class:
+          type: string
+        seatsAvailable:
+          type: integer
+        rating:
+          type: number
+      required:
+        - id
+        - airline
+        - airlineCode
+        - flightNumber
+        - from
+        - fromCode
+        - to
+        - toCode
+        - departureTime
+        - arrivalTime
+        - duration
+        - stops
+        - price
+        - class
+        - seatsAvailable
+        - rating
+
+    Hotel:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        city:
+          type: string
+        address:
+          type: string
+        rating:
+          type: number
+        reviewCount:
+          type: integer
+        pricePerNight:
+          type: number
+        amenities:
+          type: array
+          items:
+            type: string
+        imageUrl:
+          type: string
+        category:
+          type: string
+        discount:
+          type: integer
+      required:
+        - id
+        - name
+        - city
+        - address
+        - rating
+        - reviewCount
+        - pricePerNight
+        - amenities
+        - imageUrl
+        - category
+        - discount
+
+    Offer:
+      type: object
+      properties:
+        id:
+          type: string
+        title:
+          type: string
+        description:
+          type: string
+        discount:
+          type: string
+        code:
+          type: string
+        validTill:
+          type: string
+        imageUrl:
+          type: string
+        category:
+          type: string
+      required:
+        - id
+        - title
+        - description
+        - discount
+        - code
+        - validTill
+        - imageUrl
+        - category
+
+    Destination:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        country:
+          type: string
+        imageUrl:
+          type: string
+        startingPrice:
+          type: number
+        description:
+          type: string
+        tags:
+          type: array
+          items:
+            type: string
+      required:
+        - id
+        - name
+        - country
+        - imageUrl
+        - startingPrice
+        - description
+        - tags

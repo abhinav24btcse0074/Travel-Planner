@@ -1,0 +1,16 @@
+packages:
+  "framer-motion": "For smooth page transitions and micro-interactions"
+  "date-fns": "For elegant date formatting in search results and forms"
+
+images:
+  - path: "artifacts/makemytrip/public/images/hero-bg.png"
+    description: "Stunning travel background showing a beautiful scenic view of mountains at sunset with an airplane flying across a vibrant orange and deep blue sky. Modern, clean, and aspirational."
+    aspect_ratio: "16:9"
+  - path: "artifacts/makemytrip/public/images/logo.png"
+    description: "Modern minimalist logo for a premium travel booking brand. Features a sleek stylized airplane and globe motif using deep navy blue and vibrant orange colors on a transparent background."
+    aspect_ratio: "3:4"
+
+notes:
+  - Using generated hooks from @workspace/api-client-react for data fetching.
+  - Simulating booking actions with client-side state/toasts since no booking endpoints exist in the provided OpenAPI spec.
+  - Relying on window.location.search for query params parsing as wouter's standard pattern.
