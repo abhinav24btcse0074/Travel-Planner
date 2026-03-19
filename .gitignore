@@ -47,3 +47,11 @@ Thumbs.db
 # Replit
 .cache/
 .local/
+
+# Local environment variables (do not commit real secrets)
+.env
+.env.local
+.env.*.local
+
+# Keep generated API client in the repo so GitHub clones work without running codegen
+!lib/api-client-react/src/generated/
