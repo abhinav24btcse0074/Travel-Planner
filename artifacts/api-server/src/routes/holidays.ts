@@ -1,5 +1,4 @@
 import { Router, type IRouter } from "express";
-import { z } from "zod";
 
 const router: IRouter = Router();
 
@@ -235,29 +234,6 @@ const holidayPackages = [
   },
 ];
 
-const HolidayPackagesResponse = z.array(z.object({
-  id: z.string(),
-  title: z.string(),
-  destination: z.string(),
-  country: z.string(),
-  imageUrl: z.string(),
-  duration: z.string(),
-  startingPrice: z.number(),
-  originalPrice: z.number(),
-  discount: z.number(),
-  rating: z.number(),
-  reviewCount: z.number(),
-  category: z.string(),
-  highlights: z.array(z.string()),
-  inclusions: z.array(z.string()),
-  exclusions: z.array(z.string()),
-  itinerary: z.array(z.object({ day: z.number(), title: z.string(), description: z.string() })),
-  departureCity: z.string(),
-  departureDate: z.string(),
-  availableSeats: z.number(),
-  tags: z.array(z.string()),
-}));
-
 router.get("/", (req, res) => {
   let packages = holidayPackages;
   const { destination, category } = req.query as { destination?: string; category?: string };
@@ -270,8 +246,7 @@ router.get("/", (req, res) => {
   if (category) {
     packages = packages.filter(p => p.category.toLowerCase().includes(category.toLowerCase()));
   }
-  const data = HolidayPackagesResponse.parse(packages);
-  res.json(data);
+  res.json(packages);
 });
 
 export default router;

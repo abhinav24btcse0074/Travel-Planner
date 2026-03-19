@@ -262,3 +262,43 @@ export const GetPopularDestinationsResponseItem = zod.object({
 export const GetPopularDestinationsResponse = zod.array(
   GetPopularDestinationsResponseItem,
 );
+
+/**
+ * @summary Get holiday packages
+ */
+export const GetHolidayPackagesQueryParams = zod.object({
+  destination: zod.coerce.string().optional(),
+  category: zod.coerce.string().optional(),
+});
+
+export const GetHolidayPackagesResponseItem = zod.object({
+  id: zod.string(),
+  title: zod.string(),
+  destination: zod.string(),
+  country: zod.string(),
+  imageUrl: zod.string(),
+  duration: zod.string(),
+  startingPrice: zod.number(),
+  originalPrice: zod.number(),
+  discount: zod.number(),
+  rating: zod.number(),
+  reviewCount: zod.number(),
+  category: zod.string(),
+  highlights: zod.array(zod.string()),
+  inclusions: zod.array(zod.string()),
+  exclusions: zod.array(zod.string()),
+  itinerary: zod.array(
+    zod.object({
+      day: zod.number(),
+      title: zod.string(),
+      description: zod.string(),
+    }),
+  ),
+  departureCity: zod.string(),
+  departureDate: zod.string(),
+  availableSeats: zod.number(),
+  tags: zod.array(zod.string()),
+});
+export const GetHolidayPackagesResponse = zod.array(
+  GetHolidayPackagesResponseItem,
+);

@@ -1,17 +1,14 @@
-import { useLocation } from "wouter";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { useSearchFlights, SearchFlightsClass } from "@workspace/api-client-react";
 import { format, parseISO } from "date-fns";
 import { PlaneTakeoff, PlaneLanding, Plane, Filter, Clock, Banknote, ShieldAlert } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { useToast } from "@/hooks/use-toast";
+import { Link } from "wouter";
 import { motion } from "framer-motion";
 
 export default function Flights() {
-  const [location] = useLocation();
-  const { toast } = useToast();
   const searchParams = new URLSearchParams(window.location.search);
   
   const from = searchParams.get("from") || "DEL";
@@ -25,14 +22,6 @@ export default function Flights() {
   });
 
   const [sortBy, setSortBy] = useState("cheapest");
-
-  const handleBook = (flightId: string) => {
-    toast({
-      title: "Processing Booking",
-      description: "Redirecting to secure payment gateway...",
-    });
-    // In a real app, this would redirect to a checkout flow
-  };
 
   const sortedFlights = flights ? [...flights].sort((a, b) => {
     if (sortBy === "cheapest") return a.price - b.price;
@@ -209,12 +198,11 @@ export default function Flights() {
                         <p className="text-2xl font-bold text-foreground tracking-tight">₹{flight.price.toLocaleString()}</p>
                         <p className="text-xs text-muted-foreground">per adult</p>
                       </div>
-                      <Button 
-                        onClick={() => handleBook(flight.id)}
-                        className="bg-accent hover:bg-orange-600 text-white font-bold rounded-xl px-8 shadow-lg shadow-accent/20"
-                      >
-                        Book Now
-                      </Button>
+                      <Link href={`/flights/${flight.id}/book?from=${from}&to=${to}&date=${date}&passengers=${passengers}&class=${flightClass}`}>
+                        <Button className="bg-accent hover:bg-orange-600 text-white font-bold rounded-xl px-8 shadow-lg shadow-accent/20">
+                          Book Now
+                        </Button>
+                      </Link>
                     </div>
                   </motion.div>
                 ))}

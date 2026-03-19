@@ -170,6 +170,35 @@ export interface Destination {
   tags: string[];
 }
 
+export type HolidayPackageItineraryItem = {
+  day: number;
+  title: string;
+  description: string;
+};
+
+export interface HolidayPackage {
+  id: string;
+  title: string;
+  destination: string;
+  country: string;
+  imageUrl: string;
+  duration: string;
+  startingPrice: number;
+  originalPrice: number;
+  discount: number;
+  rating: number;
+  reviewCount: number;
+  category: string;
+  highlights: string[];
+  inclusions: string[];
+  exclusions: string[];
+  itinerary: HolidayPackageItineraryItem[];
+  departureCity: string;
+  departureDate: string;
+  availableSeats: number;
+  tags: string[];
+}
+
 export type SearchFlightsParams = {
   from: string;
   to: string;
@@ -199,4 +228,9 @@ export type GetHotelRoomsParams = {
   checkIn?: string;
   checkOut?: string;
   guests?: number;
+};
+
+export type GetHolidayPackagesParams = {
+  destination?: string;
+  category?: string;
 };

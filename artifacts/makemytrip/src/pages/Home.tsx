@@ -3,8 +3,9 @@ import { Footer } from "@/components/Footer";
 import { SearchWidget } from "@/components/SearchWidget";
 import { useGetOffers, useGetPopularDestinations } from "@workspace/api-client-react";
 import { motion } from "framer-motion";
-import { BadgePercent, ShieldCheck, Clock, CreditCard, ChevronRight } from "lucide-react";
+import { BadgePercent, ShieldCheck, Clock, CreditCard, ChevronRight, MapPin } from "lucide-react";
 import { Link } from "wouter";
+import { format } from "date-fns";
 
 export default function Home() {
   const { data: offers, isLoading: offersLoading } = useGetOffers();
@@ -138,21 +139,26 @@ export default function Home() {
                   key={dest.id}
                   className="group relative h-64 md:h-80 rounded-3xl overflow-hidden cursor-pointer shadow-lg"
                 >
-                  <img 
-                    src={dest.imageUrl || "https://images.unsplash.com/photo-1506461883276-594c8cb25bc3?w=800&h=1000&fit=crop"} 
-                    alt={dest.name}
-                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
-                  <div className="absolute bottom-0 left-0 w-full p-5 text-white">
-                    <h3 className="text-xl font-display font-bold mb-1">{dest.name}</h3>
-                    <p className="text-sm text-white/80 mb-2">{dest.country}</p>
-                    <div className="flex items-center justify-between">
-                      <span className="text-xs bg-white/20 backdrop-blur-md px-2 py-1 rounded font-medium">
-                        Starts ₹{dest.startingPrice.toLocaleString()}
-                      </span>
+                  <Link href={`/hotels?city=${encodeURIComponent(dest.name)}&checkIn=${format(new Date(Date.now() + 7 * 86400000), "yyyy-MM-dd")}&checkOut=${format(new Date(Date.now() + 9 * 86400000), "yyyy-MM-dd")}&guests=2`} className="block w-full h-full">
+                    <img 
+                      src={dest.imageUrl || "https://images.unsplash.com/photo-1506461883276-594c8cb25bc3?w=800&h=1000&fit=crop"} 
+                      alt={dest.name}
+                      className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
+                    <div className="absolute bottom-0 left-0 w-full p-5 text-white">
+                      <h3 className="text-xl font-display font-bold mb-1">{dest.name}</h3>
+                      <p className="text-sm text-white/80 mb-2 flex items-center gap-1"><MapPin className="w-3 h-3" />{dest.country}</p>
+                      <div className="flex items-center justify-between">
+                        <span className="text-xs bg-white/20 backdrop-blur-md px-2 py-1 rounded font-medium">
+                          Starts ₹{dest.startingPrice.toLocaleString()}
+                        </span>
+                        <span className="text-xs bg-accent/80 backdrop-blur-md px-2 py-1 rounded font-semibold opacity-0 group-hover:opacity-100 transition-opacity">
+                          View Hotels →
+                        </span>
+                      </div>
                     </div>
-                  </div>
+                  </Link>
                 </motion.div>
               ))}
             </div>

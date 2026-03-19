@@ -22,8 +22,10 @@ import type {
   Destination,
   ErrorResponse,
   Flight,
+  GetHolidayPackagesParams,
   GetHotelRoomsParams,
   HealthStatus,
+  HolidayPackage,
   Hotel,
   HotelDetail,
   Offer,
@@ -883,6 +885,103 @@ export function useGetPopularDestinations<
   request?: SecondParameter<typeof customFetch>;
 }): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
   const queryOptions = getGetPopularDestinationsQueryOptions(options);
+
+  const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
+    queryKey: QueryKey;
+  };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+/**
+ * @summary Get holiday packages
+ */
+export const getGetHolidayPackagesUrl = (params?: GetHolidayPackagesParams) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? "null" : value.toString());
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0
+    ? `/api/holidays?${stringifiedParams}`
+    : `/api/holidays`;
+};
+
+export const getHolidayPackages = async (
+  params?: GetHolidayPackagesParams,
+  options?: RequestInit,
+): Promise<HolidayPackage[]> => {
+  return customFetch<HolidayPackage[]>(getGetHolidayPackagesUrl(params), {
+    ...options,
+    method: "GET",
+  });
+};
+
+export const getGetHolidayPackagesQueryKey = (
+  params?: GetHolidayPackagesParams,
+) => {
+  return [`/api/holidays`, ...(params ? [params] : [])] as const;
+};
+
+export const getGetHolidayPackagesQueryOptions = <
+  TData = Awaited<ReturnType<typeof getHolidayPackages>>,
+  TError = ErrorType<unknown>,
+>(
+  params?: GetHolidayPackagesParams,
+  options?: {
+    query?: UseQueryOptions<
+      Awaited<ReturnType<typeof getHolidayPackages>>,
+      TError,
+      TData
+    >;
+    request?: SecondParameter<typeof customFetch>;
+  },
+) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey =
+    queryOptions?.queryKey ?? getGetHolidayPackagesQueryKey(params);
+
+  const queryFn: QueryFunction<
+    Awaited<ReturnType<typeof getHolidayPackages>>
+  > = ({ signal }) => getHolidayPackages(params, { signal, ...requestOptions });
+
+  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof getHolidayPackages>>,
+    TError,
+    TData
+  > & { queryKey: QueryKey };
+};
+
+export type GetHolidayPackagesQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getHolidayPackages>>
+>;
+export type GetHolidayPackagesQueryError = ErrorType<unknown>;
+
+/**
+ * @summary Get holiday packages
+ */
+
+export function useGetHolidayPackages<
+  TData = Awaited<ReturnType<typeof getHolidayPackages>>,
+  TError = ErrorType<unknown>,
+>(
+  params?: GetHolidayPackagesParams,
+  options?: {
+    query?: UseQueryOptions<
+      Awaited<ReturnType<typeof getHolidayPackages>>,
+      TError,
+      TData
+    >;
+    request?: SecondParameter<typeof customFetch>;
+  },
+): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+  const queryOptions = getGetHolidayPackagesQueryOptions(params, options);
 
   const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
     queryKey: QueryKey;
